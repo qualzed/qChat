@@ -1,0 +1,1 @@
+server_exit_button = "F1"
