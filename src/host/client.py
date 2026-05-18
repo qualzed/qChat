@@ -10,17 +10,14 @@ def SetClientMode():
      toConnect = input("Enter IP to connect: ")
      if toConnect:
           Client = True
-          try: # 18.05.2026 | If user entered wrong IP - it will send him error
-               RunClient(toConnect)
-          except Exception as e:
-               print(e)
+          RunClient(toConnect) # 18.05.2026 | Bad way to fix it
 
 def RunClient(IP: str = "127.0.0.1"):
      try:
           global client_sock, server_addr
 
           client_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-          client_sock.bind(("0.0.0.0", 5006))
+          client_sock.bind(("0.0.0.0", 5006)) # If you run it for tests - just change this port
           server_addr = (IP, 5005)
           
           client_sock.sendto(f"{user.NAME} has been connected".encode(), server_addr)
