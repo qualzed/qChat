@@ -22,7 +22,7 @@ A lightweight, console-based messenger built with Python using the UDP protocol.
 
 ## 🛠 Tech Stack
 
-*   **Language:** Python 3.11
+*   **Language:** Python 3.14 ~~3.11~~
 *   **Networking:** `socket` library
 *   **Concurrency:** `threading` (for simultaneous listen/send)
 
