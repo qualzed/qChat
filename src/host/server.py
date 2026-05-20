@@ -1,6 +1,6 @@
 import socket, requests, keyboard, threading
-from src import console, port, control
-from src.host import message
+from src import console, port, control, user
+from src.host import message, server, client
 
 Server: bool = False
 clients = [] # Connected clients list
@@ -12,6 +12,12 @@ def getUserName(ip):
                return c['name']
           else:
                print('Error to get username from client list')
+
+def FindClientIPOnServer(name: str):
+     for c in clients:
+          if name == c['name']:
+               receiver_ip = c['ip']
+               return receiver_ip
 
 def RunServer():
      global server_sock, Server

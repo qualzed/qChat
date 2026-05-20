@@ -6,11 +6,11 @@ from src import user
 fileData = None
 reqFile = None
 
-def writeFileToBytes(receiver: str, path: str = "Unknown.qChat"):
+def writeFileToBytes(receiver: str, sock, path: str = "Unknown.qChat"):
      global fileData
      with open(path, 'rb') as f:
           fileData = f.read()
-          server.server_sock.sendto(var.file_flag.encode() + fileData + var.file_flag_name.encode() + path.encode(), receiver)
+          sock.server_sock.sendto(var.file_flag.encode() + fileData + var.file_flag_name.encode() + path.encode(), receiver)
 
 def sendFileRequest(senderName: str, receiver: str, filename: str, size: float):
      if(size > 1000):
@@ -29,9 +29,9 @@ def sendFileRequest(senderName: str, receiver: str, filename: str, size: float):
      sender_data.sendto(msg.encode(), receiver)
      sender_data.sendto(var.code[0]['code'].encode(), receiver)
      packet.SendTimeout()
-     writeFileToBytes(receiver=receiver, path=filename)
+     writeFileToBytes(receiver=receiver, sock=sender_data, path=filename)
 
-def FileSave(name: str, data: bytes): # Поменяли тип на bytes
+def FileSave(name: str, data: bytes): # save on receiver computer
      download_path = "downloads"
      if not os.path.exists(download_path):
           os.makedirs(download_path)

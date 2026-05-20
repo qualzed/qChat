@@ -35,10 +35,9 @@ def MessageHandler():
                          for c in server.clients:
                               if currentUser == c['name']:
                                    sentFileName = filePath
-                                   # sendFile.sendFileRequest(server.getUserName(user.returnPersonalIP()), c['ip'], filePath, size_in_bytes) # Back it when it will be fixed
-                                   sendFile.sendFileRequest('127.0.0.1', c['ip'], filePath, size_in_bytes)
+                                   sendFile.sendFileRequest(user.returnPersonalIP(), c['ip'], filePath, size_in_bytes)
                               else:
-                                   print("Undefiend user")
+                                   print("Undefined user")
                     else:
                          print("Undefined file")
                msg = None
