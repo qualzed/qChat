@@ -62,6 +62,7 @@ def MessageHandler():
                                    else:
                                         print("Undefined user")
                          elif client.Client:
+                              sendFile.sendFileRequest(user.returnPersonalIP(), '0.0.0.0', filePath, size_in_bytes, currentUser)
                               pass # here will be code where client send request to server to check is exist this user or not
                     else:
                          print("Undefined file")

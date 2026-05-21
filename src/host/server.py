@@ -13,7 +13,7 @@ def getUserName(ip):
           else:
                print('Error to get username from client list')
 
-def FindClientIPOnServer(name: str):
+def NameToIP(name: str): # This function will return IP if user with given name is found
      for c in clients:
           if name == c['name']:
                receiver_ip = c['ip']

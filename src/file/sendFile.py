@@ -12,11 +12,11 @@ def writeFileToBytes(receiver, sock, path: str = "Unknown.qChat"):
           fileData = f.read()
           sock.sendto(var.file_flag.encode() + fileData + var.file_flag_name.encode() + path.encode(), receiver)
 
-def sendFileRequest(senderName: str, receiver: str, filename: str, size: float):
-     if(size > 1000):
+def sendFileRequest(senderName: str, receiver: str, filename: str, size: float, username: str): # 21.05.2026 user: str - was added
+     if(size > packet.packetSize): # fixed 21.05.2026
           print(f"You cant send any file that bigger then {packet.packetSize} bytes.")
           return
-     
+
      msg = f"\n{senderName} has sent you file '{filename}' size: {round(size, 2)} byte(-s)"
      
      if user.getUserMode() == "server":
@@ -25,6 +25,10 @@ def sendFileRequest(senderName: str, receiver: str, filename: str, size: float):
           sender_data = client.client_sock
      else:
           return
+     
+     if receiver == '0.0.0.0':
+          sender_data = client.client_sock # Force client mode cause in message.py client cant read client list, only server
+          receiver = client.server_addr # Send it to server anyway, then server will check it and return to current client
      
      sender_data.sendto(msg.encode(), receiver)
      sender_data.sendto(var.code[0]['code'].encode(), receiver)
