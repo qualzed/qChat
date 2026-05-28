@@ -1,27 +1,42 @@
-# qChat 🤫
+<p align="center">
+  <img src="icon.png" width="128" alt="qChat Logo" style="border-radius: 50%; box-shadow: 0 4px 20px rgba(0,0,0,0.3); background: radial-gradient(circle, rgba(255,0,128,0.2) 0%, rgba(0,255,255,0.2) 100%);">
+</p>
 
-A modular, console-based TCP messenger built entirely in Python using standard sockets. It allows real-time messaging and seamless file transfers between a server and multiple clients through a unified command system.
+<h1 align="center">
+  <samp>qChat</samp>
+</h1>
+
+<p align="center">
+  <b>A modular, console-based TCP messenger built entirely in Python using standard sockets.</b><br>
+  <i>Allows real-time messaging and seamless file transfers between a server and multiple clients.</i>
+</p>
+
+<p align="center">
+  <a href="https://python.org" target="_blank">
+    <img src="https://img.shields.io/badge/Python-3.14-yellow?style=plastic" alt="Python Version">
+  </a>
+  <a href="https://radmin-vpn.com" target="_blank">
+    <img src="https://img.shields.io/badge/RadminVPN-Network%20Tool-blue?style=plastic" alt="Radmin VPN">
+  </a>
+</p>
 
 ---
 
 ## 📸 Preview
-
-### Main Menu
-![Main Menu](screenshot.png)
-
-### App Icon
-<img src="icon.png" width="100" alt="qChat Icon"/>
+<p align="center">
+  <img src="screenshot.png" alt="Main Menu" width="85%">
+</p>
 
 ---
 
 ## ✨ Features
 
-* **Multi-Client Architecture**: Server supports multiple simultaneous client connections.
-* **Global Chat Room**: Messages are instantly broadcasted to all connected users.
-* **File Transfer Protocol**: Send files bi-directionally (Client to Server / Server to Client).
-* **Command-Driven Control**: System commands parsed via the `$` prefix.
-* **Dynamic Identity**: Change your nickname on the fly during the session.
-* **Modular Codebase**: Clean, decoupled architecture with 10+ specific modules.
+* **Multi-Client Architecture** — Server supports multiple simultaneous client connections.
+* **Global Chat Room** — Messages are instantly broadcasted to all connected users.
+* **File Transfer Protocol** — Send files bi-directionally (Client to Server / Server to Client).
+* **Command-Driven Control** — System commands parsed via the `$` prefix.
+* **Dynamic Identity** — Change your nickname on the fly during the session.
+* **Modular Codebase** — Clean, decoupled architecture with 10+ specific modules.
 
 ---
 
@@ -29,7 +44,7 @@ A modular, console-based TCP messenger built entirely in Python using standard s
 
 Messages starting with `$` are reserved for system operations and are not broadcast to the chat.
 
-* `$sendfile` - Initiates a file transfer request.
+* `$sendfile` — Initiates a file transfer request.
 * *(More commands can be implemented inside the modular handler).*
 
 ---
@@ -37,23 +52,30 @@ Messages starting with `$` are reserved for system operations and are not broadc
 ## 📁 Repository Structure
 
 ```bash
-├── main.py              # Entry point (7 lines of code, launches the menu)
-├── icon.png             # Application logo
-├── screen.png           # Interface screenshot
+.
+├── main.py                      # Application entry point (launches the main menu)
+├── requirements.txt             # Project dependencies
+├── icon.png                     # Application logo
+├── screen.png                   # Interface screenshot
 └── src/
-    ├── menu.py          # Main menu interface and navigation
-    ├── port.py          # Port scanner and manager (defaults to 5005)
-    ├── user.py          # Nickname manager and connection state definitions
-    ├── packet.py        # Packet size configurations and headers
-    ├── header.py        # Global imports aggregator
-    ├── console.py       # Console utility wrappers (e.g., screen clearing)
-    └── file/
-        └── sendFile.py  # Binary file encoder and transmission logic
-    └── host/
-        ├── server.py    # Core server engine (tracks clients, IPs, and names)
-        ├── client.py    # Core client engine (manages current session)
-        ├── message.py   # Message processing and broadcasting handler
-        └── var.py       # System flags and request markers (e.g., \$filerequest)
+    ├── console.py               # Console utility wrappers (e.g., screen clearing)
+    ├── header.py                # Global imports aggregator
+    ├── menu.py                  # Main menu interface and navigation
+    ├── packet.py                # Packet size configurations and headers
+    ├── port.py                  # Port scanner and manager (defaults to 5005)
+    ├── user.py                  # Nickname manager and connection state definitions
+    ├── crypto/
+    │   ├── crypto_main.py       # Core cryptographic functions
+    │   └── key_generation.py    # Key generation and management data
+    ├── file/
+    │   └── sendFile.py          # Binary file encoding and transmission logic
+    ├── host/
+    │   ├── client.py            # Core client engine (manages current session)
+    │   ├── message.py           # Message processing and broadcasting handler
+    │   ├── server.py            # Core server engine (tracks clients, IPs, and names)
+    │   └── var.py               # System flags and request markers (e.g., \$filerequest)
+    └── ui/
+        └── interface.py         # UI core engine
 ```
 
 ---
@@ -61,16 +83,17 @@ Messages starting with `$` are reserved for system operations and are not broadc
 ## 🚀 Getting Started
 
 ### Prerequisites
-* Python 3.14 Installed
+* Python 3.14+ installed
 
 ### Installation
-1. Clone the repository:
+
+1. **Clone the repository:**
    ```bash
-   git clone https://github.com/qualzed/qChat
+   git clone https://github.com
    cd qChat
    ```
 
-2. Run the application:
+2. **Run the application:**
    ```bash
    python main.py
    ```
