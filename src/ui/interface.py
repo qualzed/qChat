@@ -1,9 +1,25 @@
 import sys
+import argparse
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout, QTextEdit
 
 MESSAGE_LIMIT = 256
+
+parser = argparse.ArgumentParser(description="IP Required and Mode")
+parser.add_argument("-i", "--ip", type=str, required=True, help="IP Required to connect")
+parser.add_argument("-m", "--mode", type=str, required=True, help="User connection mode")
+args = parser.parse_args()
+
+def CheckFlags():
+     global args
+     if args.mode == "server":
+          print(f"[!] You ran qChat in server mode.\nIP: {None}")
+     elif args.mode == "client" and args.ip is not None:
+          print("[*] You ran qChat in client mode.")
+     else:
+          print(f"[?] Missing required arguments. Please check your flags.")
+          exit(0) # Turn off qChat
 
 class MainWindow(QMainWindow):
      def __init__(self):
@@ -42,9 +58,12 @@ class MainWindow(QMainWindow):
             self.chat_history.append(text)
             self.textField.clear()
 
-app = QApplication(sys.argv)
+if __name__ == "__main__":
+     CheckFlags()
 
-window = MainWindow()
-window.show()
+     app = QApplication(sys.argv)
 
-app.exec()
+     window = MainWindow()
+     window.show()
+
+     app.exec()
