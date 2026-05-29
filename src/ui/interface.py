@@ -2,7 +2,7 @@ import sys
 import argparse
 from PyQt6.QtCore import QSize, Qt
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout, QTextEdit
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QLineEdit, QVBoxLayout, QWidget, QHBoxLayout, QTextEdit, QMessageBox
 
 MESSAGE_LIMIT = 256
 
@@ -10,6 +10,19 @@ parser = argparse.ArgumentParser(description="IP Required and Mode")
 parser.add_argument("-i", "--ip", type=str, required=True, help="IP Required to connect")
 parser.add_argument("-m", "--mode", type=str, required=True, help="User connection mode")
 args = parser.parse_args()
+
+def sendNotification(type: str, title: str, text: str):
+     icons = {
+          "Error": QMessageBox.Icon.Critical,
+          "Warning": QMessageBox.Icon.Warning,
+          "Info": QMessageBox.Icon.Information
+     }
+
+     msg = QMessageBox()
+     msg.setWindowTitle(title)
+     msg.setText(text)
+     msg.setIcon(icons.get(type, QMessageBox.Icon.Information))
+     msg.exec()
 
 def CheckFlags():
      global args
