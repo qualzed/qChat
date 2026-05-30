@@ -1,5 +1,5 @@
 import random, time, requests
-from src import console, menu
+from src import console, menu, tag
 from src.host import client, server
 
 NAME = f"USER {random.randint(0,100)}" # Default username with random numbers
@@ -25,16 +25,17 @@ def CheckUser():
 def UsernameChange():
      global NAME
      console.clear()
-     NewUsername = input(f"Your current username is {NAME}\n> ")
+     NewUsername = input(f"{tag.info}Your current username is {NAME}\n> ")
      if NewUsername:
           if len(NewUsername) > 12:
-               print("NO MORE THAN 12 SYMBOLS!")
+               print(f"{tag.warning}NO MORE THAN 12 SYMBOLS!")
+               time.sleep(3)
                console.clear()
                UsernameChange()
           else:
                NAME = NewUsername
                
-               print("You have changed your username")
+               print(f"{tag.success}You have changed your username")
                with open('user.txt', 'w') as userFile:
                     userFile.write(NAME)
 

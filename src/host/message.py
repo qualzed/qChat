@@ -1,5 +1,5 @@
 from src.host import client, server, var
-from src import user, control, packet
+from src import user, control, packet, tag
 from src.file import sendFile
 import os
 
@@ -22,7 +22,7 @@ def CheckMessage(data):
                var.code[0]['state'] = True
                return True
           else:
-               print("Critical error! File name flag not found.")
+               print(f"{tag.error}Critical error! File name flag not found.")
                return True
 
      if sentData.startswith(var.code[0]['code']):
@@ -60,12 +60,12 @@ def MessageHandler():
                                         sentFileName = filePath
                                         sendFile.sendFileRequest(user.returnPersonalIP(), c['ip'], filePath, size_in_bytes, "None") # Fixed error with file sending
                                    else:
-                                        print("Undefined user")
+                                        print(f"{tag.warning}Undefined user")
                          elif client.Client:
                               sendFile.sendFileRequest(user.returnPersonalIP(), '0.0.0.0', filePath, size_in_bytes, currentUser)
                               pass # here will be code where client send request to server to check is exist this user or not
                     else:
-                         print("Undefined file")
+                         print(f"{tag.warning}Undefined file")
                msg = None
           
           if msg != None:

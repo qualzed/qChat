@@ -1,6 +1,10 @@
 from src.host import server, client
-from src import user, console, port
-import  time
+from src import user, console, port, tag, packet
+import time, os
+from colorama import just_fix_windows_console, Fore
+
+mColor = Fore.GREEN # Main color
+mReset = Fore.RESET
 
 text = """
              .oooooo.   oooo                      .
@@ -14,11 +18,14 @@ d88' `888  888           888P"Y88b  `P  )88b    888
       8P'
       "
 """
-menu = """
-[1]: Run Server
-[2]: Run Client
-[3]: Change Username
-[4]: Check Port and Open port
+
+menu = f"""
+[{mColor} 1 {mReset}] Run Server
+[{mColor} 2 {mReset}] Run Client
+[{mColor} 3 {mReset}] Change Username
+[{mColor} 4 {mReset}] Check Port and Open port
+
+{tag.info}Settings window will soon
 """
 
 def Launch():
@@ -30,6 +37,9 @@ def Launch():
      Menu()
 
 def Menu():
+     if os.name == "nt":
+          just_fix_windows_console()
+
      console.clear()
      print(menu)
      
@@ -42,4 +52,4 @@ def Menu():
           case 3:
                user.UsernameChange()
           case 4:
-               port.check_port_open(5005)
+               port.open_port(packet.port)

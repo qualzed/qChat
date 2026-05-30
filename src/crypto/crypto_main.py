@@ -1,14 +1,13 @@
 from cryptography.fernet import Fernet
 from src.crypto import key_generation
-# Main code of encryption and decryption will be soon ( now 10:00 PM 05.27.2026 )
 
 cipher = None
 
-def generateKey():
-     global cipher
-     key = Fernet.generate_key().decode()
-     cipher = Fernet(key.encode())
-     return key
+def generateKey(): # Tabulation fixed
+    global cipher
+    key = Fernet.generate_key().decode()
+    cipher = Fernet(key.encode())
+    return key
 
 def returnEncrypted(data: str):
     if cipher is None:

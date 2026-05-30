@@ -64,6 +64,7 @@ Messages starting with `$` are reserved for system operations and are not broadc
     ├── packet.py                # Packet size configurations and headers
     ├── port.py                  # Port scanner and manager (defaults to 5005)
     ├── user.py                  # Nickname manager and connection state definitions
+    ├── tag.py                   # Tag templates
     ├── crypto/
     │   ├── crypto_main.py       # Core cryptographic functions
     │   └── key_generation.py    # Key generation and management data

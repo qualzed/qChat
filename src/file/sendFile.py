@@ -1,5 +1,5 @@
 import os, keyboard
-from src import control, packet
+from src import control, packet, tag
 from src.host import client, server, var
 from src import user
 
@@ -14,7 +14,7 @@ def writeFileToBytes(receiver, sock, path: str = "Unknown.qChat"):
 
 def sendFileRequest(senderName: str, receiver: str, filename: str, size: float, username: str): # 21.05.2026 user: str - was added
      if(size > packet.packetSize): # fixed 21.05.2026
-          print(f"You cant send any file that bigger then {packet.packetSize} bytes.")
+          print(f"{tag.warning}You cant send any file that bigger then {packet.packetSize} bytes.")
           return
 
      msg = f"\n{senderName} has sent you file '{filename}' size: {round(size, 2)} byte(-s)"
@@ -43,9 +43,9 @@ def FileSave(name: str, data: bytes): # save on receiver computer
      with open(f"{download_path}/{name}", "wb") as file:
           try:
                file.write(data)
-               print(f"\nFile has been downloaded success! Check out {download_path} folder.")
+               print(f"{tag.success}\nFile has been downloaded success! Check out {download_path} folder.")
           except Exception as e:
-               print(f"\nError while download has accured: {e}")
+               print(f"{tag.error}\nError while download has accured: {e}")
 
 def sendFileToUser(receiver: str):
      if user.getUserMode() == "server":
