@@ -3,6 +3,7 @@ from src.host import client, server
 
 packetSize = 4096 # Bytes
 port = 5005 # Default port
+server_port = 5005 # Default server port
 sock = None # Switch sended packet (To client or to server)
 
 def SendBytes(data: str): # This def is replacing sock.sendto

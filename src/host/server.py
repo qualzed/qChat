@@ -30,7 +30,7 @@ def RunServer():
      
      console.clear()
      public_ip = requests.get('https://api.ipify.org').text
-     print(f"{tag.success}You launched a server. Your IP to connect: {public_ip}") # \nPress {control.server_exit_button} to shutdown the server.
+     print(f"{tag.success}You launched a server. Your IP to connect: {public_ip} | Port: {packet.port}") # \nPress {control.server_exit_button} to shutdown the server.
      
      threading.Thread(target=message.RecieveHandler, daemon=True).start()
      message.MessageHandler()

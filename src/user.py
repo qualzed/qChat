@@ -1,5 +1,5 @@
-import random, time, requests
-from src import console, menu, tag
+import random, time, requests, json
+from src import console, menu, tag, serializer
 from src.host import client, server
 
 NAME = f"USER {random.randint(0,100)}" # Default username with random numbers
@@ -17,10 +17,8 @@ def returnPersonalIP():
 
 def CheckUser():
      global NAME
-     with open('user.txt', 'r') as userFile:
-          NAME = userFile.read()
-          if len(NAME) > 12 :
-               NAME = NAME[:9]+"..."
+     if len(NAME) > 12 :
+          NAME = NAME[:9]+"..."
 
 def UsernameChange():
      global NAME
@@ -29,6 +27,7 @@ def UsernameChange():
      if NewUsername:
           if len(NewUsername) > 12:
                print(f"{tag.warning}NO MORE THAN 12 SYMBOLS!")
+
                time.sleep(3)
                console.clear()
                UsernameChange()
@@ -36,8 +35,8 @@ def UsernameChange():
                NAME = NewUsername
                
                print(f"{tag.success}You have changed your username")
-               with open('user.txt', 'w') as userFile:
-                    userFile.write(NAME)
+               
+               serializer.UpdateJSON("username", NewUsername)
 
                time.sleep(3)
                menu.Menu()

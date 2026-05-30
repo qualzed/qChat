@@ -1,5 +1,5 @@
 from src.host import client, server, var
-from src import user, control, packet, tag
+from src import user, control, packet, tag, serializer
 from src.file import sendFile
 import os
 
@@ -31,7 +31,7 @@ def CheckMessage(data):
 def MessageHandler():
      global sentFileName, sentFileData
      while 1:  
-          msg = input("> ")
+          msg = input(f"{serializer.INPUT_SYMBOL} ")
 
           if var.code[0]['state'] == True:
                if msg == control.accept_file_key:
@@ -99,7 +99,10 @@ def RecieveHandler():
                for c in server.clients:
                     if(c['ip'] != addr):
                          server.server_sock.sendto(data, c['ip'])
+
+               print("\r\033[K", end="")
                print(f"{data.decode()}")
+               print(f"{serializer.INPUT_SYMBOL}", end="", flush=True)
 
           if client.Client:
                try:
@@ -108,7 +111,9 @@ def RecieveHandler():
                     if CheckMessage(data): # Intercepts bytes and check it on flag
                          continue 
 
+                    print("\r\033[K", end="")
                     print(f"{data.decode()}") # In the end cause check continue which is upper than sending
+                    print(f"{serializer.INPUT_SYMBOL}", end="", flush=True)
 
                except:
                     continue

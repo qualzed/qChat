@@ -1,10 +1,9 @@
 from src.host import server, client
-from src import user, console, port, tag, packet
-import time, os
+from src import user, console, port, tag, packet, serializer, settings
+import time, os, sys
 from colorama import just_fix_windows_console, Fore
 
-mColor = Fore.GREEN # Main color
-mReset = Fore.RESET
+devUserMode: bool = False
 
 text = """
              .oooooo.   oooo                      .
@@ -19,37 +18,63 @@ d88' `888  888           888P"Y88b  `P  )88b    888
       "
 """
 
-menu = f"""
-[{mColor} 1 {mReset}] Run Server
-[{mColor} 2 {mReset}] Run Client
-[{mColor} 3 {mReset}] Change Username
-[{mColor} 4 {mReset}] Check Port and Open port
+def menu():
+     return f"""
+[{serializer.MAIN_COLOR} 1 {serializer.MAIN_RESET}] Run Server
+[{serializer.MAIN_COLOR} 2 {serializer.MAIN_RESET}] Run Client
+[{serializer.MAIN_COLOR} 3 {serializer.MAIN_RESET}] Settings
+[{serializer.MAIN_COLOR} 4 {serializer.MAIN_RESET}] Check Port and Open port
+"""
 
-{tag.info}Settings window will soon
+_devMenu = f"""
+{tag.info}You have entered developer mode, please select the mode to run
+{tag.info}In developer mode, when launching a client or server, the default port + 1 is used. 
+{tag.info}This is necessary for a successful connection.
+
+{tag.info}Type 00 to run server and connect to yourself
 """
 
 def Launch():
      print(text)
 
-     time.sleep(1)
+     time.sleep(0.5)
      console.clear()
 
      Menu()
+
+def devMenu():
+     global devUserMode
+     serializer.MAIN_COLOR = Fore.RED # Red color if you are in developer mode
+     devUserMode = not devUserMode
+     packet.port = packet.port + 1 # changing default port
+
+     menu()
+     console.clear()
+     print(_devMenu + menu())
+
+     choice = int(input(f"{serializer.INPUT_SYMBOL}"))
+     if choice == 0:
+          os.system(f'start cmd /k "python main.py -m dev -p {packet.port}"')
+          packet.port = packet.port - 1
+          user.NAME = "devServer"
+          server.RunServer()
 
 def Menu():
      if os.name == "nt":
           just_fix_windows_console()
 
      console.clear()
-     print(menu)
+     print(menu())
      
-     choice = int(input("> "))
+     choice = int(input(f"{serializer.INPUT_SYMBOL}"))
      match(choice):
           case 1:
                server.RunServer()
           case 2:
                client.SetClientMode()
-          case 3:
-               user.UsernameChange()
+          case 3: # Settings
+               settings.settingsMenu()
           case 4:
                port.open_port(packet.port)
+          case 999:
+               devMenu()
