@@ -1,8 +1,14 @@
+# Cache
 **/__pycache__/
-icon.png
+*.pyc
+# Build
+*.build/
+*.dist/
+*.onefile-build/
+*.exe
+# Other
+icon.ico
 test.txt
 user.txt
 config.json
 main.spec
-build/
-dist/
