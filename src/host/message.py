@@ -2,7 +2,7 @@ from src.host import client, server, var
 from src import user, control, packet, tag, serializer, console, menu
 from src.file import sendFile
 from src.crypto import key_generation, crypto_main
-from cryptography.fernet import Fernet
+import datetime
 import os
 
 sentFileData = None
@@ -70,6 +70,8 @@ def MessageHandler():
      global sentFileName, sentFileData, msg
      while 1:  
           msg = input(f"\033[999;1H{serializer.INPUT_SYMBOL}")
+          formatted_msg = f"[{datetime.datetime.now().strftime("%I:%M %p").lstrip("0")}] You: {msg}"
+          print(f"\033[F\033[K{formatted_msg}")
 
           if var.code[0]['state'] == True:
                if msg == control.accept_file_key:
