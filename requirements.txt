@@ -1,3 +1,6 @@
-pip install cryptography==48.0.0
-pip install argparse==1.4.0
-pip install colorama==0.4.6
+colorama==0.4.6
+keyboard==0.13.5
+PyQt6==6.11.0
+pyqt6_sip==13.11.1
+Requests==2.34.2
+upnpy==1.1.8
