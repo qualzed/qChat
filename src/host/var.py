@@ -5,3 +5,7 @@ code = [
 
 file_flag = '$sfd:'
 file_flag_name = '$sfn:'
+server_send_kick = '$ssk:'
+crypto_key_flag = '$ckf:'
+client_pub_flag = "$cpk:"
+room_key_flag = "$cpk:"

@@ -15,6 +15,9 @@ def getUserMode():
 def returnPersonalIP():
      return requests.get('https://api.ipify.org').text
 
+def returnUsername():
+     return NAME
+
 def CheckUser():
      global NAME
      if len(NAME) > 12 :
@@ -40,4 +43,3 @@ def UsernameChange():
 
                time.sleep(3)
                menu.Menu()
-          

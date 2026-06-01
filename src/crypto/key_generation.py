@@ -1,3 +1,6 @@
-from src.crypto import crypto_main
+from cryptography.hazmat.primitives.asymmetric import ec
 
-key: str = crypto_main.generateKey() # Key which we will send when somebody connect
+key: str = None         # Ready key
+ServerKey: str = None   # For client
+cipher = None           # Fernet object
+private_key = None

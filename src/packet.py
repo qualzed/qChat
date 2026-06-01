@@ -1,5 +1,6 @@
 import time
-from src.host import client, server
+from src.host import client, server, var
+from src import user
 
 packetSize = 4096 # Bytes
 port = 5005 # Default port
@@ -15,3 +16,27 @@ def SendBytes(data: str): # This def is replacing sock.sendto
 
 def SendTimeout():
      time.sleep(0.05) # Timeout
+
+def SendServer(data: str):
+     if server.Server:
+          for c in server.clients:
+               server.server_sock.sendto(f"{data}".encode(), c['ip'])
+
+def SendDisconnect():
+     if client.Client:
+          try:
+               client.Client = False
+               if client.client_sock is not None:
+                    client.client_sock.close()
+                    client.client_sock = None
+          except:
+               pass
+     else:
+          try:
+               SendServer(f"{user.returnUsername()} has closed the server. You have been disconnected.")
+               SendServer(f"{var.server_send_kick}everybody")
+               if server.server_sock is not None:
+                    server.server_sock.close()
+                    server.server_sock = None
+          except:
+               pass

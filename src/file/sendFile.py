@@ -43,9 +43,9 @@ def FileSave(name: str, data: bytes): # save on receiver computer
      with open(f"{download_path}/{name}", "wb") as file:
           try:
                file.write(data)
-               print(f"{tag.success}\nFile has been downloaded success! Check out {download_path} folder.")
+               print(f"{tag.success}File has been downloaded success! Check out {download_path} folder.")
           except Exception as e:
-               print(f"{tag.error}\nError while download has accured: {e}")
+               print(f"{tag.error}Error while download has accured: {e}")
 
 def sendFileToUser(receiver: str):
      if user.getUserMode() == "server":

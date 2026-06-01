@@ -1,6 +1,7 @@
 import socket, time, threading
 from src.host import message
 from src import user, packet
+from src.crypto import key_generation, crypto_main
 
 Client = False
 
@@ -25,7 +26,8 @@ def RunClient(IP: str = "127.0.0.1"):
           client_sock.sendto(f"{user.NAME} has been connected".encode(), server_addr)
           client_sock.sendto(f"$nm:{user.NAME}".encode(), server_addr)
 
-          threading.Thread(target=message.RecieveHandler, daemon=True).start()
+          crypto_main.generateDHKeys()
+          threading.Thread(target=message.RecieveHandler, daemon=True, args=(True,)).start()
           message.MessageHandler()
      except Exception as e:
           print(e)

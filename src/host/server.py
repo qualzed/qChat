@@ -1,6 +1,7 @@
 import socket, requests, keyboard, threading
 from src import console, port, control, user, packet, tag
 from src.host import message, server, client
+from src.crypto import crypto_main, key_generation
 
 Server: bool = False
 clients = [] # Connected clients list
@@ -32,5 +33,6 @@ def RunServer():
      public_ip = requests.get('https://api.ipify.org').text
      print(f"{tag.success}You launched a server. Your IP to connect: {public_ip} | Port: {packet.port}") # \nPress {control.server_exit_button} to shutdown the server.
      
-     threading.Thread(target=message.RecieveHandler, daemon=True).start()
+     crypto_main.generateRoomKey()
+     threading.Thread(target=message.RecieveHandler, daemon=True, args=(True,)).start()
      message.MessageHandler()

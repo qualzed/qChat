@@ -4,7 +4,7 @@ from src import user, packet, menu, tag
 
 CONFIG_FILE = "config.json"
 INPUT_SYMBOL_COLOR = Fore.RED # GREEN BLUE CYAN MAGENTA RED YELLOW
-INPUT_SYMBOL = f"{INPUT_SYMBOL_COLOR}> "
+INPUT_SYMBOL = f"{INPUT_SYMBOL_COLOR}>{Fore.RESET} "
 
 MAIN_COLOR = Fore.GREEN # Main color
 MAIN_RESET = Fore.RESET

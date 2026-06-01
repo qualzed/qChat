@@ -1,6 +1,6 @@
 from src.host import server, client
 from src import user, console, port, tag, packet, serializer, settings
-import time, os, sys
+import time, os
 from colorama import just_fix_windows_console, Fore
 
 devUserMode: bool = False
@@ -31,7 +31,7 @@ _devMenu = f"""
 {tag.info}In developer mode, when launching a client or server, the default port + 1 is used. 
 {tag.info}This is necessary for a successful connection.
 
-{tag.info}Type 00 to run server and connect to yourself
+{tag.info}Type 0 to run server and connect to yourself
 """
 
 def Launch():
