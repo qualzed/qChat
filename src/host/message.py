@@ -74,7 +74,7 @@ def MessageHandler():
      global sentFileName, sentFileData, msg
      while 1:  
           with patch_stdout():
-               msg = session.prompt(ANSI(f"{serializer.INPUT_SYMBOL} "))
+               msg = session.prompt(ANSI(f"{serializer.INPUT_SYMBOL}"))
 
           print(f"\033[1A\033[2K", end="", flush=True)
           formatted_msg = f"[{datetime.datetime.now().strftime('%I:%M %p').lstrip('0')}] You: {msg}" # Timestamp
@@ -129,10 +129,18 @@ def MessageHandler():
           
           if msg != None:
                if client.Client:
-                    client.client_sock.sendto(crypto_main.returnEncrypted(f"{user.NAME}: {msg}"), client.server_addr)
+                    client.client_sock.sendto(
+                         crypto_main.returnEncrypted(
+                              f"[{datetime.datetime.now().strftime('%I:%M %p').lstrip('0')}] {user.NAME}: {msg}"
+                         ), client.server_addr
+                    )
                if server.Server:
                     for c in server.clients:
-                         server.server_sock.sendto(crypto_main.returnEncrypted(f"{user.NAME}: {msg}"), c['ip'])
+                         server.server_sock.sendto(
+                              crypto_main.returnEncrypted(
+                                   f"[{datetime.datetime.now().strftime('%I:%M %p').lstrip('0')}] {user.NAME}: {msg}"
+                              ), c['ip']
+                         )
 
 def RecieveHandler(status: bool):
      global RecieverStatus
