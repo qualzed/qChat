@@ -1,10 +1,11 @@
-import socket, requests, keyboard, threading
-from src import console, port, control, user, packet, tag
-from src.host import message, server, client
-from src.crypto import crypto_main, key_generation
+import socket, requests, threading
+from src import console, packet, tag
+from src.host import message, var
+from src.crypto import crypto_main
 
 Server: bool = False
 clients = [] # Connected clients list
+bans = []
 server_sock = None
 
 def getUserName(ip):
@@ -14,11 +15,21 @@ def getUserName(ip):
           else:
                print(f'{tag.warning}Error to get username from client list')
 
-def NameToIP(name: str): # This function will return IP if user with given name is found
+def NameToIP(username: str): 
      for c in clients:
-          if name == c['name']:
-               receiver_ip = c['ip']
-               return receiver_ip
+          if username == c['name']:
+               return c['ip'][0] 
+     return None
+          
+def BanByName(username: str): 
+     userIP = NameToIP(username)
+     if userIP is not None:
+          bans.append(userIP) 
+          packet.SendVisualMessage(f"{tag.info}You have banned {username} (IP: {userIP}).")
+     else:
+          packet.SendVisualMessage(f"{tag.warning}IP of {username} was not found.")
+          
+     packet.SendServer(f"{var.server_send_ban + username}")
 
 def RunServer():
      global server_sock, Server

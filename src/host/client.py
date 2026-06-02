@@ -7,7 +7,6 @@ Client = False
 
 def SetClientMode():
      global Client
-
      toConnectIP = input("Enter IP to connect: ")
      toConnectPort = input("Enter Port to connect: ")
      if toConnectIP:
