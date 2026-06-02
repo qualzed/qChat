@@ -59,14 +59,18 @@ def devMenu():
           user.NAME = "devServer"
           server.RunServer()
 
-def Menu():
-     if os.name == "nt":
-          just_fix_windows_console()
-
+def Menu(): # https://github.com/qualzed/qChat/pull/1
      console.clear()
      print(menu())
+
+     try:
+          choice = int(input(f"{serializer.INPUT_SYMBOL}"))
+     except ValueError:
+          print(f"{tag.error} Invalid input! Please select and enter the number.")
+          time.sleep(1)
+          Menu()
+          return
      
-     choice = int(input(f"{serializer.INPUT_SYMBOL}"))
      match(choice):
           case 1:
                server.RunServer()
@@ -78,3 +82,7 @@ def Menu():
                port.open_port(packet.port)
           case 999:
                devMenu()
+          case _:
+               print(f"{tag.error} Invalid input! Please select and enter the number.")
+               time.sleep(1)
+               Menu()

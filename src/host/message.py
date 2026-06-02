@@ -71,10 +71,14 @@ def CheckMessage(data):
           return True # Just skip
 
 def MessageHandler():
-     global sentFileName, sentFileData, msg
-     while 1:  
+     global sentFileName, sentFileData
+     while 1:
           with patch_stdout():
                msg = session.prompt(ANSI(f"{serializer.INPUT_SYMBOL}"))
+
+          if not msg or not msg.strip():
+               print(f"\033[1A\033[2K", end="", flush=True)
+               continue
 
           print(f"\033[1A\033[2K", end="", flush=True)
           formatted_msg = f"[{datetime.datetime.now().strftime('%I:%M %p').lstrip('0')}] You: {msg}" # Timestamp
@@ -97,8 +101,8 @@ def MessageHandler():
                          packet.SendVisualMessage(f"{c['ip']} {c['name']}\n")
                
                if msg == "$sendfile":
-                    currentUser = str(input("Who is receiver: "))
-                    filePath = str(input(f"Path to your file (limit is {packet.packetSize} bytes): "))
+                    currentUser = session.prompt("Who is receiver: ")
+                    filePath = session.prompt(f"Path to your file (limit is {packet.packetSize} bytes): ")
                     if os.path.isfile(filePath):
                          size_in_bytes = os.path.getsize(filePath)
                          if server.Server:
@@ -127,7 +131,7 @@ def MessageHandler():
 
                msg = None
           
-          if msg != None:
+          if msg is not None:
                if client.Client:
                     client.client_sock.sendto(
                          crypto_main.returnEncrypted(
