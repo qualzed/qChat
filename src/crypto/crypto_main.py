@@ -46,7 +46,9 @@ def deriveTemporaryKey(peer_public_bytes: bytes) -> Fernet:
         return None
 
 def returnEncrypted(data: str):
-    if key_generation.cipher is None: return None
+    if key_generation.cipher is None: 
+        print("Cipher is not exsist.")
+        return None
     return key_generation.cipher.encrypt(data.encode())
 
 def returnDecrypted(data: bytes):

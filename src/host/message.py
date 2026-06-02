@@ -3,11 +3,15 @@ from src import user, control, packet, tag, serializer, console, menu
 from src.file import sendFile
 from src.crypto import key_generation, crypto_main
 import datetime
-import os
+import os, shutil
+from prompt_toolkit import PromptSession
+from prompt_toolkit.patch_stdout import patch_stdout
+from prompt_toolkit.formatted_text import ANSI
 
 sentFileData = None
 sentFileName = None
 ReceiverStatus = False
+session = PromptSession()
 
 def CheckMessage(data):
      sentData = data.decode(errors='ignore')
@@ -21,18 +25,18 @@ def CheckMessage(data):
                sentFileData = data[len(var.file_flag.encode()):flag_name_index]
                sentFileName = data[flag_name_index + len(flag_name_bytes):].decode(errors='ignore')
                
-               print("Accept file? (y/n)")
+               packet.SendVisualMessage("Accept file? (y/n)")
                var.code[0]['state'] = True
                return True
           else:
-               print(f"{tag.error}Critical error! File name flag not found.")
+               packet.SendVisualMessage(f"{tag.error}Critical error! File name flag not found.")
                return True
 
      if sentData.startswith(var.server_send_kick):
           kicked = sentData[len(var.server_send_kick):]
           if user.returnUsername() == kicked or kicked == "everybody":
                packet.SendDisconnect()
-               print(f"{tag.info}Write $exit to leave the session.")
+               packet.SendVisualMessage(f"{tag.info}Write $exit to leave the session.")
 
           return True
 
@@ -69,13 +73,16 @@ def CheckMessage(data):
 def MessageHandler():
      global sentFileName, sentFileData, msg
      while 1:  
-          msg = input(f"\033[999;1H{serializer.INPUT_SYMBOL}")
-          formatted_msg = f"[{datetime.datetime.now().strftime("%I:%M %p").lstrip("0")}] You: {msg}"
-          print(f"\033[F\033[K{formatted_msg}")
+          with patch_stdout():
+               msg = session.prompt(ANSI(f"{serializer.INPUT_SYMBOL} "))
+
+          print(f"\033[1A\033[2K", end="", flush=True)
+          formatted_msg = f"[{datetime.datetime.now().strftime('%I:%M %p').lstrip('0')}] You: {msg}" # Timestamp
+          packet.SendVisualMessage(formatted_msg)
 
           if var.code[0]['state'] == True:
                if msg == control.accept_file_key:
-                    print(sentFileName)
+                    packet.SendVisualMessage(sentFileName)
                     sendFile.FileSave(name=sentFileName, data=sentFileData)
                var.code[0]['state'] = False
 
@@ -87,7 +94,7 @@ def MessageHandler():
 
                if msg == "$userlist":
                     for c in server.clients:
-                         print(f"{c['ip']} {c['name']}\n")
+                         packet.SendVisualMessage(f"{c['ip']} {c['name']}\n")
                
                if msg == "$sendfile":
                     currentUser = str(input("Who is receiver: "))
@@ -100,12 +107,12 @@ def MessageHandler():
                                         sentFileName = filePath
                                         sendFile.sendFileRequest(user.returnUsername(), c['ip'], filePath, size_in_bytes, "None") # Fixed error with file sending
                                    else:
-                                        print(f"{tag.warning}Undefined user")
+                                        packet.SendVisualMessage(f"{tag.warning}Undefined user")
                          elif client.Client:
                               sendFile.sendFileRequest(user.returnUsername(), '0.0.0.0', filePath, size_in_bytes, currentUser)
                               pass # here will be code where client send request to server to check is exist this user or not
                     else:
-                         print(f"{tag.warning}Undefined file")
+                         packet.SendVisualMessage(f"{tag.warning}Undefined file")
 
                if msg == "$clear": # only visual chat history cleaning
                     console.clear()
@@ -157,9 +164,7 @@ def RecieveHandler(status: bool):
                     if(c['ip'] != addr):
                          server.server_sock.sendto(data, c['ip'])
 
-               print("\r\033[K", end="")
-               print(f"{crypto_main.returnDecrypted(data)}")
-               print(f"{serializer.INPUT_SYMBOL}", end="", flush=True)
+               packet.SendVisualMessage(data=crypto_main.returnDecrypted(data))
 
           if client.Client:
                try:
@@ -168,9 +173,9 @@ def RecieveHandler(status: bool):
                     if CheckMessage(data): # Intercepts bytes and check it on flag
                          continue 
 
-                    print("\r\033[K", end="")
-                    print(f"{crypto_main.returnDecrypted(data)}") # In the end cause check continue which is upper than sending
-                    print(f"{serializer.INPUT_SYMBOL}", end="", flush=True)
+                    
+                    with patch_stdout():
+                         packet.SendVisualMessage(f"{crypto_main.returnDecrypted(data)}") # In the end cause check continue which is upper than sending
 
                except:
                     continue
