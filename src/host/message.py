@@ -33,7 +33,8 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
           
           if data == "$mute":
                if server.Server:
-                    packet.SendVisualMessage("Who you want to mute: ")
+                    currentUser = session.prompt("Who you want to mute: ")
+                    server.Punishment.Mute(currentUser)
                else:
                     packet.SendVisualMessage(f"{tag.info}You must be a server to use the command.")
 
@@ -61,8 +62,7 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
           if data == "$ban":
                if server.Server:
                     currentUser = session.prompt("Who you want to ban: ")
-                    if server.NameToIP(currentUser) is not None:
-                         server.Punishment.Ban(currentUser)
+                    server.Punishment.Ban(currentUser)
 
           if data == "$exit": # Server disconnect
                global RecieverStatus
@@ -100,7 +100,12 @@ def CheckMessage(data):
           elif kicked == user.returnUsername():
                packet.SendDisconnect()
                menu.Menu("You have been banned on the server.")
-
+          return True
+     
+     if sentData.startswith(var.server_send_mute):
+          muted = sentData[len(var.server_send_mute):]
+          if muted == user.returnUsername():
+               packet.SendVisualMessage(f"{tag.info}You have been muted on the server. Now your messages are unaviable")
           return True
 
      if client.Client:
@@ -172,7 +177,7 @@ def RecieveHandler(status: bool):
                try:
                     data, addr = server.server_sock.recvfrom(packet.packetSize)
 
-                    if addr[0] in server.bans:
+                    if addr[0] in server.bans or addr[0] in server.mutes:
                          continue
 
                     if CheckMessage(data): # Intercepts bytes and check it on flag

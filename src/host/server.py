@@ -34,6 +34,7 @@ class Punishment:
                          packet.SendServer(f"{var.server_send_ban + username}")
                     case "mute":
                          packet.SendVisualMessage(f"{tag.info}You have muted {username} (IP: {userIP}). Reason: {reason}")
+                         packet.SendServer(f"{var.server_send_mute + username}")
           else:
                packet.SendVisualMessage(f"{tag.warning}IP of {username} was not found.")
 
