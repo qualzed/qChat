@@ -2,15 +2,14 @@ from src.host import client, server, var
 from src import user, control, packet, tag, serializer, console, menu
 from src.file import sendFile
 from src.crypto import key_generation, crypto_main
-import datetime
-import os
+import os, datetime
 from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout
 from prompt_toolkit.formatted_text import ANSI
 
 sentFileData = None
 sentFileName = None
-ReceiverStatus = False
+RecieverStatus = False
 session = PromptSession()
 
 def CheckLocalMessage(data: str): # This def will check before send it to client/server
@@ -32,6 +31,12 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
                for c in server.clients:
                     packet.SendVisualMessage(f"{c['ip'][0]} {c['name']}\n") # c['ip'][0] - it returns only IP, without port
           
+          if data == "$mute":
+               if server.Server:
+                    packet.SendVisualMessage("Who you want to mute: ")
+               else:
+                    packet.SendVisualMessage(f"{tag.info}You must be a server to use the command.")
+
           if data == "$sendfile":
                currentUser = session.prompt("Who is receiver: ")
                filePath = session.prompt(f"Path to your file (limit is {packet.packetSize} bytes): ")
@@ -57,7 +62,7 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
                if server.Server:
                     currentUser = session.prompt("Who you want to ban: ")
                     if server.NameToIP(currentUser) is not None:
-                         server.BanByName(currentUser)
+                         server.Punishment.Ban(currentUser)
 
           if data == "$exit": # Server disconnect
                global RecieverStatus
@@ -94,9 +99,7 @@ def CheckMessage(data):
                packet.SendVisualMessage(f"{tag.info}Write $exit to leave the session.")
           elif kicked == user.returnUsername():
                packet.SendDisconnect()
-               packet.SendVisualMessage(
-                    f"{tag.warning}You have been kicked from the server.\nUse {serializer.MAIN_COLOR}$exit{serializer.MAIN_RESET}"
-               )
+               menu.Menu("You have been banned on the server.")
 
           return True
 

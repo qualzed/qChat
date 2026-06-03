@@ -42,8 +42,7 @@ def SendDisconnect():
           try:
                SendServer(f"{user.returnUsername()} has closed the server. You have been disconnected.")
                SendServer(f"{var.server_send_kick}everybody")
-               if server.server_sock is not None:
-                    server.server_sock.close()
-                    server.server_sock = None
+               server.server_sock.close()
+               server.server_sock = None
           except:
                pass

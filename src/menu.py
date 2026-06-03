@@ -1,7 +1,9 @@
 from src.host import server, client
 from src import user, console, port, tag, packet, serializer, settings
-import time, os
+import time, os, sys
 from colorama import just_fix_windows_console, Fore
+from prompt_toolkit import print_formatted_text
+from prompt_toolkit.formatted_text import ANSI
 
 devUserMode: bool = False
 
@@ -59,8 +61,16 @@ def devMenu():
           user.NAME = "devServer"
           server.RunServer()
 
-def Menu(): # https://github.com/qualzed/qChat/pull/1
+def Menu(comment: str = None): # https://github.com/qualzed/qChat/pull/1
+     if os.name == "nt":
+          just_fix_windows_console()
+
+     if hasattr(sys.stdout, 'original_stdout'):
+          sys.stdout = sys.stdout.original_stdout
+
      console.clear()
+     if comment is not None:
+          print(f"{tag.info}{comment}")
      print(menu())
 
      try:

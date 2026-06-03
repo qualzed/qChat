@@ -5,7 +5,8 @@ from src.crypto import crypto_main
 
 Server: bool = False
 clients = [] # Connected clients list
-bans = []
+bans = [] # Banned clients list
+mutes = [] # Muted clients list
 server_sock = None
 
 def getUserName(ip):
@@ -20,22 +21,36 @@ def NameToIP(username: str):
           if username == c['name']:
                return c['ip'][0] 
      return None
-          
-def BanByName(username: str): 
-     userIP = NameToIP(username)
-     if userIP is not None:
-          bans.append(userIP) 
-          packet.SendVisualMessage(f"{tag.info}You have banned {username} (IP: {userIP}).")
-     else:
-          packet.SendVisualMessage(f"{tag.warning}IP of {username} was not found.")
-          
-     packet.SendServer(f"{var.server_send_ban + username}")
+     
+class Punishment:
+     @staticmethod
+     def _apply_punishment_(username: str, reason: str, array: list, punishment: str):
+          userIP = NameToIP(username)
+          if userIP is not None:
+               array.append(userIP)
+               match punishment:
+                    case "ban":
+                         packet.SendVisualMessage(f"{tag.info}You have banned {username} (IP: {userIP}). Reason: {reason}")
+                         packet.SendServer(f"{var.server_send_ban + username}")
+                    case "mute":
+                         packet.SendVisualMessage(f"{tag.info}You have muted {username} (IP: {userIP}). Reason: {reason}")
+          else:
+               packet.SendVisualMessage(f"{tag.warning}IP of {username} was not found.")
+
+     @staticmethod
+     def Ban(username: str, reason: str = "No reason"):
+          Punishment._apply_punishment_(username, reason, bans, "ban")
+
+     @staticmethod
+     def Mute(username: str, reason: str = "No reason"):
+          Punishment._apply_punishment_(username, reason, mutes, "mute")
 
 def RunServer():
      global server_sock, Server
 
      Server = True
      server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+     server_sock.settimeout(0.5)
      server_sock.bind(("0.0.0.0", packet.port))
      
      # port.open_port(packet.port) # I think qChat doesn't need it
