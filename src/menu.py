@@ -79,10 +79,10 @@ def Menu(): # https://github.com/qualzed/qChat/pull/1
           case 3: # Settings
                settings.settingsMenu()
           case 4:
-               port.open_port(packet.port)
+               port.PortMenu()
           case 999:
                devMenu()
           case _:
-               print(f"{tag.error} Invalid input! Please select and enter the number.")
+               packet.SendVisualMessage(f"{tag.error} Invalid input! Please select and enter the number.")
                time.sleep(1)
                Menu()
