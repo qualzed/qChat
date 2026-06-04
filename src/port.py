@@ -55,6 +55,9 @@ def FindOpenPort():
     packet.SendVisualMessage("Opened ports:")
     for port in OpenedPorts:
         packet.SendVisualMessage(f"{port}")
+    packet.SendVisualMessage(
+        f"{tag.info}Reasons why it won't work without Radmin: https://telegra.ph/Public-IP-and-Private-IP-06-03"
+    )
 
 def open_port(port):
     upnp = upnpy.UPnP()
