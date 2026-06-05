@@ -44,6 +44,7 @@ def InitJSON():
      config = {
           "port": 5005,
           "username": user.NAME,
+          "packetSize": 1024,
           "symbol": ">",
           "symbolColor": "WHITE"
      }
@@ -60,6 +61,7 @@ def ReadJSON():
           
           user.NAME = config['username']
           packet.port = config['port']
+          packet.packetSize = config['packetSize']
           COLOR_NAME = config['symbolColor']
           INPUT_SYMBOL_COLOR = getattr(Fore, COLOR_NAME, Fore.WHITE)
           MAIN_COLOR = getattr(Fore, COLOR_NAME, Fore.WHITE)

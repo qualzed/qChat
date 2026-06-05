@@ -12,6 +12,7 @@ def settingsMenu():
 [{serializer.MAIN_COLOR} 2 {serializer.MAIN_RESET}] Change port
 [{serializer.MAIN_COLOR} 3 {serializer.MAIN_RESET}] Change prefix
 [{serializer.MAIN_COLOR} 4 {serializer.MAIN_RESET}] Change accent
+[{serializer.MAIN_COLOR} 5 {serializer.MAIN_RESET}] Packet size
 [{serializer.MAIN_COLOR} 0 {serializer.MAIN_RESET}] Back to menu
 """)
      choice = int(input(f"{serializer.INPUT_SYMBOL}"))
@@ -48,5 +49,15 @@ def settingsMenu():
                     serializer.UpdateJSON("symbolColor", serializer.INPUT_SYMBOL_COLOR_LIST_ARRAY[newSymbolColor])
                     print(f"{tag.success}You set new color: {serializer.INPUT_SYMBOL_COLOR_LIST_ARRAY[newSymbolColor]}")
                     settingsMenu()
+          case 5:
+               newPacketSize = int(input(f"{tag.info}Min: 64 bytes. Max: 16192 bytes. Recommend 1024 / 2048.\n{serializer.INPUT_SYMBOL}"))
+               if newPacketSize > 16192 or newPacketSize < 64:
+                    print(f"{tag.error}Limit is 16192")
+               else:
+                    serializer.UpdateJSON("packetSize", newPacketSize)
+                    print(f"{tag.success}You set new packet size: {newPacketSize}")
+                    settingsMenu()
           case 0:
                menu.Launch()
+          case _:
+               settingsMenu()

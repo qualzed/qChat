@@ -109,6 +109,15 @@ def CheckMessage(data):
           return True
 
      if client.Client:
+          if data.startswith(var.server_packet_size_flag.encode()):
+               recievedPacketSize = data.decode()
+               flag_len = len(var.server_packet_size_flag)
+               packet.packetSize = int(recievedPacketSize[flag_len:])
+               # packet.SendDisconnect()
+               # client.RunClient(client.server_addr, restart=True)
+               packet.SendVisualMessage(f"{tag.info}You recieved server packet size: {packet.packetSize}. Succesfull connect!")
+               return True
+
           if data.startswith(var.crypto_key_flag.encode()):
                server_pub_bytes = data[len(var.crypto_key_flag.encode()):]
                client_pub_bytes = crypto_main.generateDHKeys()
@@ -190,6 +199,8 @@ def RecieveHandler(status: bool):
                     if decode.startswith("$nm:"):
                          username = decode[4:]
                          server.clients.append({'ip': addr, 'name': username})
+                         # Send packet size
+                         server.server_sock.sendto(f"{var.server_packet_size_flag}{packet.packetSize}".encode(), addr)
                          # Send Cipher to connected Client
                          server_pub_bytes = crypto_main.generateDHKeys()
                          server.server_sock.sendto(var.crypto_key_flag.encode() + server_pub_bytes, addr)

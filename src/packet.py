@@ -5,7 +5,7 @@ from prompt_toolkit.patch_stdout import patch_stdout
 from prompt_toolkit import print_formatted_text
 from prompt_toolkit.formatted_text import ANSI
 
-packetSize = 4096 # Bytes
+packetSize = 1024 # Default bytes
 port = 5005 # Default port
 server_port = 5005 # Default server port
 sock = None # Switch sended packet (To client or to server)

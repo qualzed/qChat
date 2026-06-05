@@ -10,3 +10,4 @@ server_send_mute = "$ssm:"
 crypto_key_flag = '$ckf:'
 client_pub_flag = "$cpf:"
 room_key_flag = "$cpk:"
+server_packet_size_flag = "$sps:"

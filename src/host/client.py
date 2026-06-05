@@ -4,6 +4,7 @@ from src import user, packet
 from src.crypto import key_generation, crypto_main
 
 Client = False
+server_addr = None
 
 def SetClientMode():
      global Client
@@ -14,17 +15,18 @@ def SetClientMode():
           packet.server_port = int(toConnectPort)
           RunClient(toConnectIP) # 18.05.2026 | Bad way to fix it
 
-def RunClient(IP: str = "127.0.0.1"):
+def RunClient(IP: str = "127.0.0.1", restart: bool = False):
      try:
           global client_sock, server_addr
           
           client_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
           client_sock.settimeout(0.5)
           client_sock.bind(("0.0.0.0", packet.port)) # If you run it for tests - just change this port
-          server_addr = (IP, packet.server_port)
           
-          client_sock.sendto(f"{user.NAME} has been connected".encode(), server_addr)
-          client_sock.sendto(f"$nm:{user.NAME}".encode(), server_addr)
+          if not restart:
+               server_addr = (IP, packet.server_port)
+               client_sock.sendto(f"{user.NAME} has been connected".encode(), server_addr)
+               client_sock.sendto(f"$nm:{user.NAME}".encode(), server_addr)
 
           crypto_main.generateDHKeys()
           threading.Thread(target=message.RecieveHandler, daemon=True, args=(True,)).start()
