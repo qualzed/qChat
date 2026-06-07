@@ -11,6 +11,15 @@ sentFileData = None
 sentFileName = None
 RecieverStatus = False
 session = PromptSession()
+cmd_list = f"""
+{tag.info}Command list
+$userlist
+$ban
+$mute
+$sendfile
+$clear
+$exit
+"""
 
 def CheckLocalMessage(data: str): # This def will check before send it to client/server
      global sentFileName, sentFileData
@@ -26,6 +35,9 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
                if data == var.code[0]['code']:
                     v['state'] = not v['state']
                     sendFile.sendFileToUser()
+
+          if data == "$cmds":
+               print(cmd_list)
 
           if data == "$userlist":
                for c in server.clients:
