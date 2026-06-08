@@ -30,10 +30,10 @@ class Punishment:
                array.append(userIP)
                match punishment:
                     case "ban":
-                         packet.SendVisualMessage(f"{tag.info}You have banned {username} (IP: {userIP}). Reason: {reason}")
+                         packet.SendVisualMessage(f"{tag.info}You have banned {username} (IP: {userIP}). Reason: {reason}.  {username}'s IP: {NameToIP(username)}")
                          packet.SendServer(f"{var.server_send_ban + username}")
                     case "mute":
-                         packet.SendVisualMessage(f"{tag.info}You have muted {username} (IP: {userIP}). Reason: {reason}")
+                         packet.SendVisualMessage(f"{tag.info}You have muted {username} (IP: {userIP}). Reason: {reason}. {username}'s IP: {NameToIP(username)}")
                          packet.SendServer(f"{var.server_send_mute + username}")
           else:
                packet.SendVisualMessage(f"{tag.warning}IP of {username} was not found.")

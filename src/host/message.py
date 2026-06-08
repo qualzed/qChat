@@ -15,7 +15,9 @@ cmd_list = f"""
 {tag.info}Command list
 $userlist
 $ban
+$unban
 $mute
+$unmute
 $sendfile
 $clear
 $exit
@@ -49,6 +51,26 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
                     server.Punishment.Mute(currentUser)
                else:
                     packet.SendVisualMessage(f"{tag.info}You must be a server to use the command.")
+          
+          if data == "$unmute":
+               if server.Server:
+                    packet.SendVisualMessage(f"{tag.info}Mute list:")
+                    for c in server.mutes:
+                         packet.SendVisualMessage(c)
+                    currentUser = session.prompt("Who you want to unmute: ")
+                    if currentUser in server.mutes:
+                         server.mutes.remove(currentUser)
+                         packet.SendVisualMessage(f"You have removed {currentUser} from mute list.")
+          
+          if data == "$unban":
+               if server.Server:
+                    packet.SendVisualMessage(f"{tag.info}Ban list:")
+                    for c in server.bans:
+                         packet.SendVisualMessage(c)
+                    currentUser = session.prompt("Who you want to unban: ")
+                    if currentUser in server.bans:
+                         server.bans.remove(currentUser)
+                         packet.SendVisualMessage(f"You have removed {currentUser} from ban list.")
 
           if data == "$sendfile":
                currentUser = session.prompt("Who is receiver: ")
