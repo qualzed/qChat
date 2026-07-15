@@ -42,8 +42,11 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
                print(cmd_list)
 
           if data == "$userlist":
+               if not server.Server: # 15.07.2026
+                    packet.SendVisualMessage("You are not a host.")
+                    return True
                for c in server.clients:
-                    packet.SendVisualMessage(f"{c['ip'][0]} {c['name']}\n") # c['ip'][0] - it returns only IP, without port
+                    packet.SendVisualMessage(f"{c['ip'][0]} {c['name']} ( {f'Banned. Reason: {c["ban_reason"]}' if c['ban'] else 'Active'} )\n") # c['ip'][0] - it returns only IP, without port
           
           if data == "$mute":
                if server.Server:
@@ -147,8 +150,6 @@ def CheckMessage(data):
                recievedPacketSize = data.decode()
                flag_len = len(var.server_packet_size_flag)
                packet.packetSize = int(recievedPacketSize[flag_len:])
-               # packet.SendDisconnect()
-               # client.RunClient(client.server_addr, restart=True)
                packet.SendVisualMessage(f"{tag.info}You recieved server packet size: {packet.packetSize}. Succesfull connect!")
                return True
 
@@ -232,7 +233,7 @@ def RecieveHandler(status: bool):
                     decode = data.decode().strip()
                     if decode.startswith("$nm:"):
                          username = decode[4:]
-                         server.clients.append({'ip': addr, 'name': username})
+                         server.clients.append({'ip': addr, 'name': username, 'ban': False, 'ban_reason': None})
                          # Send packet size
                          server.server_sock.sendto(f"{var.server_packet_size_flag}{packet.packetSize}".encode(), addr)
                          # Send Cipher to connected Client

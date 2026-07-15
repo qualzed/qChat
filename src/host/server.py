@@ -32,6 +32,10 @@ class Punishment:
                     case "ban":
                          packet.SendVisualMessage(f"{tag.info}You have banned {username} (IP: {userIP}). Reason: {reason}.  {username}'s IP: {NameToIP(username)}")
                          packet.SendServer(f"{var.server_send_ban + username}")
+                         for client in clients:
+                              if client['name'] == username:
+                                   client['ban'] = True
+                                   client['ban_reason'] = reason
                     case "mute":
                          packet.SendVisualMessage(f"{tag.info}You have muted {username} (IP: {userIP}). Reason: {reason}. {username}'s IP: {NameToIP(username)}")
                          packet.SendServer(f"{var.server_send_mute + username}")
