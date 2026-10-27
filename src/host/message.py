@@ -103,8 +103,8 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
 
           if data == "$exit": # Server disconnect
                global RecieverStatus
-               RecieverStatus = False
                packet.SendDisconnect()
+               RecieverStatus = False
                console.clear()
                menu.Menu()
      

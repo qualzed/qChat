@@ -1,7 +1,7 @@
 {
      "port": 5005,
      "username": "qualzed",
-     "packetSize": 4096,
+     "packetSize": 2048,
      "symbol": "$",
-     "symbolColor": "BLUE"
+     "symbolColor": "RED"
 }

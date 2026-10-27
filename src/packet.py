@@ -32,6 +32,7 @@ def SendServer(data: str):
 def SendDisconnect():
      if client.Client:
           try:
+               SendBytes(f"{user.returnUsername()} has disconnected.".encode())
                client.Client = False
                if client.client_sock is not None:
                     client.client_sock.close()
