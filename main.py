@@ -8,14 +8,20 @@ parser.add_argument("-p", "--port", type=str, required=False, help="User connect
 args = parser.parse_args()
 
 if args.mode == "dev":
-     time.sleep(3)
-     packet.port = int(args.port)
-     user.NAME = "devClient"
-     client.Client = True
-     client.RunClient("127.0.0.1")
+     try:
+          time.sleep(3)
+          packet.port = int(args.port)
+          user.NAME = "devClient"
+          client.Client = True
+          client.RunClient("127.0.0.1")
+     except Exception as e:
+          print(e)
 
 if __name__ == "__main__":
-     serializer.ReadJSON()
-     console.clear()
-     user.CheckUser()
-     menu.Launch()
+     try:
+          serializer.ReadJSON()
+          console.clear()
+          user.CheckUser()
+          menu.Launch()
+     except Exception as e:
+          print(e)
