@@ -29,7 +29,7 @@ def RunClient(IP: str = "127.0.0.1", restart: bool = False):
                client_sock.sendto(f"$nm:{user.NAME}".encode(), server_addr)
 
           crypto_main.generateDHKeys()
-          threading.Thread(target=message.RecieveHandler, daemon=True, args=(True,)).start()
+          threading.Thread(target=message.ReceiveHandler, daemon=True, args=(True,)).start()
           message.MessageHandler()
      except Exception as e:
           print(e)

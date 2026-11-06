@@ -1,21 +1,27 @@
 import os, keyboard
-from src import control, packet, tag
+from src import packet, tag
 from src.host import client, server, var
 from src import user
+from src.file import chunks
 
 fileData = None
 reqFile = None
 
-def writeFileToBytes(receiver, sock, path: str = "Unknown.qChat"):
-     global fileData
-     with open(path, 'rb') as f:
-          fileData = f.read()
-          sock.sendto(var.file_flag.encode() + fileData + var.file_flag_name.encode() + path.encode(), receiver)
+def writeFileToBytes(receiver, sock, size: float, path: str = "Unknown.qChat"):
+     if size > packet.packetSize:
+          for chunk_data in chunks.chunk(path):
+               sock.sendto(chunk_data, receiver)
+          filename = os.path.basename(path).encode()
+          sock.sendto(b'$chunks:END:' + filename, receiver)
+     else:
+          with open(path, 'rb') as f:
+               file_data = f.read()
+          sock.sendto(var.file_flag.encode() + file_data + var.file_flag_name.encode() + os.path.basename(path).encode(), receiver)
 
 def sendFileRequest(senderName: str, receiver: str, filename: str, size: float, username: str): # 21.05.2026 user: str - was added
-     if(size > packet.packetSize): # fixed 21.05.2026
-          packet.SendVisualMessage(f"{tag.warning}You cant send any file that bigger then {packet.packetSize} bytes.")
-          return
+     # if(size > packet.packetSize): # fixed 21.05.2026
+          # packet.SendVisualMessage(f"{tag.warning}You cant send any file that bigger then {packet.packetSize} bytes.")
+          # return
 
      msg = f"\n{senderName} has sent you file '{filename}' size: {round(size, 2)} byte(-s)"
      
@@ -33,7 +39,8 @@ def sendFileRequest(senderName: str, receiver: str, filename: str, size: float, 
      sender_data.sendto(msg.encode(), receiver)
      sender_data.sendto(var.code[0]['code'].encode(), receiver)
      packet.SendTimeout()
-     writeFileToBytes(receiver=receiver, sock=sender_data, path=filename)
+     sendFileToUser(receiver=receiver)
+     writeFileToBytes(receiver=receiver, sock=sender_data, size=size, path=filename)
 
 def FileSave(name: str, data: bytes): # save on receiver computer
      download_path = "downloads"

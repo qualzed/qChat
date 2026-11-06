@@ -65,5 +65,5 @@ def RunServer():
      print(f"{tag.success}You launched a server. Your IP to connect: {public_ip} | Port: {packet.port}") # \nPress {control.server_exit_button} to shutdown the server.
      
      crypto_main.generateRoomKey()
-     threading.Thread(target=message.RecieveHandler, daemon=True, args=(True,)).start()
+     threading.Thread(target=message.ReceiveHandler, daemon=True, args=(True,)).start()
      message.MessageHandler()

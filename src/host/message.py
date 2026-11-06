@@ -9,7 +9,9 @@ from prompt_toolkit.formatted_text import ANSI
 
 sentFileData = None
 sentFileName = None
-RecieverStatus = False
+ReceiverStatus = False
+receivedFileData = bytearray()
+
 session = PromptSession()
 cmd_list = f"""
 {tag.info}Command list
@@ -28,16 +30,15 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
 
      if var.code[0]['state'] == True:
           if data == control.accept_file_key:
-               packet.SendVisualMessage(sentFileName)
-               sendFile.FileSave(name=sentFileName, data=sentFileData)
+               if sentFileData is None or sentFileName is None:
+                    packet.SendVisualMessage(f"{tag.error}File data or filename is None!")
+               else:
+                    sendFile.FileSave(name=sentFileName,data=sentFileData)
+
           var.code[0]['state'] = False
-
+          return True
+     
      if data.startswith('$'):
-          for v in var.code:
-               if data == var.code[0]['code']:
-                    v['state'] = not v['state']
-                    sendFile.sendFileToUser()
-
           if data == "$cmds":
                print(cmd_list)
 
@@ -102,8 +103,8 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
                     server.Punishment.Ban(currentUser)
 
           if data == "$exit": # Server disconnect
-               global RecieverStatus
-               RecieverStatus = False
+               global ReceiverStatus
+               ReceiverStatus = False
                packet.SendDisconnect()
                console.clear()
                menu.Menu()
@@ -111,23 +112,48 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
           return True
 
 def CheckMessage(data):
+     global sentFileData, sentFileName, receivedFileData
+
      sentData = data.decode(errors='ignore')
-     if data.startswith(var.file_flag.encode()): # Here is Gemini Code
-          global sentFileData, sentFileName
-          
+
+     if data.startswith(b'$chunks:'):
+          chunk_data = data[len(b'$chunks:'):]
+          if chunk_data.startswith(b'END:'):
+               sentFileName = chunk_data[len(b'END:'):].decode(errors='ignore')
+               sentFileData = bytes(receivedFileData)
+               receivedFileData.clear()
+               
+               packet.SendVisualMessage(f"{tag.success}File received: {sentFileName}")
+               packet.SendVisualMessage("Accept file? (y/n)")
+
+               var.code[0]['state'] = True
+          else:
+               receivedFileData.extend(chunk_data)
+
+          return True
+
+     if data.startswith(var.file_flag.encode()):
           flag_name_bytes = var.file_flag_name.encode()
           flag_name_index = data.find(flag_name_bytes)
-          
           if flag_name_index > len(var.file_flag.encode()):
-               sentFileData = data[len(var.file_flag.encode()):flag_name_index]
-               sentFileName = data[flag_name_index + len(flag_name_bytes):].decode(errors='ignore')
-               
+               sentFileData = data[
+                    len(var.file_flag.encode()):flag_name_index
+               ]
+
+               sentFileName = data[
+                    flag_name_index + len(flag_name_bytes):
+               ].decode(errors='ignore')
+
                packet.SendVisualMessage("Accept file? (y/n)")
                var.code[0]['state'] = True
+
                return True
-          else:
-               packet.SendVisualMessage(f"{tag.error}Critical error! File name flag not found.")
-               return True
+
+          packet.SendVisualMessage(
+               f"{tag.error}Critical error! File name flag not found."
+          )
+
+          return True
 
      if sentData.startswith(var.server_send_ban):
           kicked = sentData[len(var.server_send_ban):]
@@ -147,10 +173,10 @@ def CheckMessage(data):
 
      if client.Client:
           if data.startswith(var.server_packet_size_flag.encode()):
-               recievedPacketSize = data.decode()
+               receivedPacketSize = data.decode()
                flag_len = len(var.server_packet_size_flag)
-               packet.packetSize = int(recievedPacketSize[flag_len:])
-               packet.SendVisualMessage(f"{tag.info}You recieved server packet size: {packet.packetSize}. Succesfull connect!")
+               packet.packetSize = int(receivedPacketSize[flag_len:])
+               packet.SendVisualMessage(f"{tag.info}You received server packet size: {packet.packetSize}. Succesfull connect!")
                return True
 
           if data.startswith(var.crypto_key_flag.encode()):
@@ -179,7 +205,7 @@ def CheckMessage(data):
                          server.server_sock.sendto(var.room_key_flag.encode() + encrypted_room_key, c['ip'])
                return True
 
-     if sentData.startswith(var.code[0]['code']):
+     if sentData.startswith(var.code[0]['code']) or sentData.startswith(var.code[1]['code']):
           return True # Just skip
 
 def MessageHandler():
@@ -213,10 +239,10 @@ def MessageHandler():
                               ), c['ip']
                          )
 
-def RecieveHandler(status: bool):
-     global RecieverStatus
-     RecieverStatus = status
-     while RecieverStatus:
+def ReceiveHandler(status: bool):
+     global ReceiverStatus
+     ReceiverStatus = status
+     while ReceiverStatus:
           if server.Server:
                try:
                     data, addr = server.server_sock.recvfrom(packet.packetSize)
@@ -243,7 +269,7 @@ def RecieveHandler(status: bool):
 
                if data.decode() == "$nm:": # skip check if the user was connected before
                     continue
-
+     
                for c in server.clients:
                     if(c['ip'] != addr):
                          server.server_sock.sendto(data, c['ip'])
