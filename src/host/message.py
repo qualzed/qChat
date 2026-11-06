@@ -33,7 +33,12 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
                if sentFileData is None or sentFileName is None:
                     packet.SendVisualMessage(f"{tag.error}File data or filename is None!")
                else:
-                    sendFile.FileSave(name=sentFileName,data=sentFileData)
+                    try:
+                         sendFile.FileSave(name=sentFileName,data=sentFileData)
+                         sentFileName, sentFileData = None, None
+                         print(sentFileData, sentFileName)
+                    except Exception as e:
+                         print(f'{tag.error}{e}')
 
           var.code[0]['state'] = False
           return True
@@ -104,8 +109,8 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
 
           if data == "$exit": # Server disconnect
                global ReceiverStatus
-               ReceiverStatus = False
                packet.SendDisconnect()
+               ReceiverStatus = False
                console.clear()
                menu.Menu()
      

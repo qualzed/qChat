@@ -25,7 +25,7 @@ def RunClient(IP: str = "127.0.0.1", restart: bool = False):
           
           if not restart:
                server_addr = (IP, packet.server_port)
-               client_sock.sendto(f"{user.NAME} has been connected".encode(), server_addr)
+               client_sock.sendto(f"{user.NAME} has connected".encode(), server_addr)
                client_sock.sendto(f"$nm:{user.NAME}".encode(), server_addr)
 
           crypto_main.generateDHKeys()
