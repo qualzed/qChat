@@ -34,6 +34,7 @@ _devMenu = f"""
 {tag.info}This is necessary for a successful connection.
 
 {tag.info}Type 0 to run server and connect to yourself
+{tag.info}Type 1 to exit
 """
 
 def Launch():
@@ -52,7 +53,7 @@ def devMenu():
 
      menu()
      console.clear()
-     print(_devMenu + menu())
+     print(_devMenu)
 
      choice = int(input(f"{serializer.INPUT_SYMBOL}"))
      if choice == 0:
@@ -60,6 +61,8 @@ def devMenu():
           packet.port = packet.port - 1
           user.NAME = "devServer"
           server.RunServer()
+     elif choice == 1:
+          Menu()
 
 def Menu(comment: str = None): # https://github.com/qualzed/qChat/pull/1
      if os.name == "nt":

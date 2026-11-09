@@ -16,7 +16,7 @@ def PortMenu():
     choice = int(input(f"{serializer.INPUT_SYMBOL}"))
     match(choice):
         case 1:
-            open_port()
+            open_port(packet.port) # 9.11.2026
         case 2:
             FindOpenPort()
         case 0:
@@ -55,9 +55,13 @@ def FindOpenPort():
     packet.SendVisualMessage("Opened ports:")
     for port in OpenedPorts:
         packet.SendVisualMessage(f"{port}")
+
     packet.SendVisualMessage(
         f"{tag.info}Reasons why it won't work without Radmin: https://telegra.ph/Public-IP-and-Private-IP-06-03"
     )
+
+    input()
+    menu.Menu()
 
 def open_port(port):
     upnp = upnpy.UPnP()
