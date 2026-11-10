@@ -35,11 +35,11 @@ def CheckLocalMessage(data: str): # This def will check before send it to client
                else:
                     try:
                          sendFile.FileSave(name=sentFileName,data=sentFileData)
-                         sentFileName, sentFileData = None, None
                          print(sentFileData, sentFileName)
                     except Exception as e:
                          print(f'{tag.error}{e}')
-
+                         
+          sentFileName, sentFileData = None, None
           var.code[0]['state'] = False
           return True
      
