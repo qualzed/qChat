@@ -1,4 +1,4 @@
-import os, keyboard
+import os
 from src import packet, tag
 from src.host import client, server, var
 from src import user

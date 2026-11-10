@@ -1,6 +1,6 @@
-import json, os
+import json
 from colorama import Fore
-from src import user, packet, menu, tag
+from src import user, packet
 
 CONFIG_FILE = "config.json"
 INPUT_SYMBOL_COLOR = Fore.RED # GREEN BLUE CYAN MAGENTA RED YELLOW

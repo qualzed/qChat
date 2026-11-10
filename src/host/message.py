@@ -1,7 +1,7 @@
 from src.host import client, server, var
 from src import user, control, packet, tag, serializer, console, menu
 from src.file import sendFile
-from src.crypto import key_generation, crypto_main
+from src.crypto import crypto_main
 import os, datetime
 from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout

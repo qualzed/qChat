@@ -1,7 +1,7 @@
 import socket, time, threading
 from src.host import message
 from src import user, packet
-from src.crypto import key_generation, crypto_main
+from src.crypto import crypto_main
 
 Client = False
 server_addr = None
