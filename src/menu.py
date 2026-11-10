@@ -1,9 +1,7 @@
 from src.host import server, client
 from src import user, console, port, tag, packet, serializer, settings
 import time, os, sys
-from colorama import just_fix_windows_console, Fore
-from prompt_toolkit import print_formatted_text
-from prompt_toolkit.formatted_text import ANSI
+from colorama import Fore
 
 devUserMode: bool = False
 
@@ -65,9 +63,6 @@ def devMenu():
           Menu()
 
 def Menu(comment: str = None): # https://github.com/qualzed/qChat/pull/1
-     if os.name == "nt":
-          just_fix_windows_console()
-
      if hasattr(sys.stdout, 'original_stdout'):
           sys.stdout = sys.stdout.original_stdout
 
@@ -82,6 +77,7 @@ def Menu(comment: str = None): # https://github.com/qualzed/qChat/pull/1
           print(f"{tag.error} Invalid input! Please select and enter the number.")
           time.sleep(1)
           Menu()
+     except KeyboardInterrupt: # CTRL+C close fix
           return
      
      match(choice):

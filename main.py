@@ -1,6 +1,6 @@
 from src.header import *
-from src import menu
-import argparse, time
+import argparse, time, os
+from colorama import just_fix_windows_console
 
 parser = argparse.ArgumentParser(description="Dev mode")
 parser.add_argument("-m", "--mode", type=str, required=False, help="User connection mode")
@@ -19,8 +19,11 @@ if args.mode == "dev":
 
 if __name__ == "__main__":
      try:
-          serializer.ReadJSON()
+          if os.name == "nt": # Once
+               just_fix_windows_console()
+
           console.clear()
+          serializer.ReadJSON()
           user.CheckUser()
           menu.Launch()
      except Exception as e:
