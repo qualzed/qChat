@@ -27,10 +27,6 @@ INPUT_SYMBOL_COLOR_LIST = f"""
 [{Fore.GREEN} 6 {Fore.RESET}] GREEN
 """
 
-def CheckInit():
-     if not os.path.exists(CONFIG_FILE):
-          data = {"port": 5005, "username": "default"}
-
 def UpdateJSON(row: str, data):
      with open(CONFIG_FILE, "r", encoding="utf-8") as file:
           config = json.load(file)
