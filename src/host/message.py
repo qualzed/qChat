@@ -177,6 +177,11 @@ def CheckMessage(data):
           return True
 
      if client.Client:
+          if data.startswith(var.connect_declined.encode()):
+               declined_reason: str = data[len(var.connect_declined.encode()):].decode().strip()
+               packet.SendDisconnect()
+               menu.Menu(f"You've been declined: {declined_reason}")
+          
           if data.startswith(var.server_packet_size_flag.encode()):
                receivedPacketSize = data.decode()
                flag_len = len(var.server_packet_size_flag)
@@ -263,13 +268,24 @@ def ReceiveHandler(status: bool):
                if addr not in [c['ip'] for c in server.clients]:
                     decode = data.decode().strip()
                     if decode.startswith("$nm:"):
-                         username = decode[4:]
-                         server.clients.append({'ip': addr, 'name': username, 'ban': False, 'ban_reason': None})
+                         banned: bool = False
+                         username: str = decode[4:]
+
+                         if len(username) > user.USERNAME_CHAR_LIMIT:
+                              packet.SendVisualMessage(f"Connection declined for user {username}: username exceeds the {user.USERNAME_CHAR_LIMIT}-character limit.")
+                              server.server_sock.sendto(f"{var.connect_declined}username is too long. You've been banned.".encode(), addr)
+                              banned = True
+                         
+                         server.clients.append({'ip': addr, 'name': username, 'ban': banned, 'ban_reason': None})
+
                          # Send packet size
-                         server.server_sock.sendto(f"{var.server_packet_size_flag}{packet.packetSize}".encode(), addr)
-                         # Send Cipher to connected Client
-                         server_pub_bytes = crypto_main.generateDHKeys()
-                         server.server_sock.sendto(var.crypto_key_flag.encode() + server_pub_bytes, addr)
+                         if not banned:
+                              server.server_sock.sendto(f"{var.server_packet_size_flag}{packet.packetSize}".encode(), addr)
+
+                              # Send Cipher to connected Client
+                              server_pub_bytes = crypto_main.generateDHKeys()
+                              server.server_sock.sendto(var.crypto_key_flag.encode() + server_pub_bytes, addr)
+
                          continue
 
                if data.decode() == "$nm:": # skip check if the user was connected before

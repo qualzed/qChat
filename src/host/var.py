@@ -3,6 +3,7 @@ code = [
      { 'code': '$fileawait', 'state': False }
 ]
 
+connect_declined = '$cd:'
 file_flag = '$sfd:'
 file_flag_name = '$sfn:'
 server_send_ban = '$ssb:'

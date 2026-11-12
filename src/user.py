@@ -2,6 +2,7 @@ import random, time, requests
 from src import console, menu, tag, serializer
 from src.host import client, server
 
+USERNAME_CHAR_LIMIT = 12
 NAME = f"USER {random.randint(0,100)}" # Default username with random numbers
 
 def getUserMode():
@@ -20,7 +21,7 @@ def returnUsername():
 
 def CheckUser():
      global NAME
-     if len(NAME) > 12 :
+     if len(NAME) > USERNAME_CHAR_LIMIT:
           NAME = NAME[:9]+"..."
 
 def UsernameChange():

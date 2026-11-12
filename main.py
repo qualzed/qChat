@@ -16,6 +16,7 @@ if args.mode == "dev":
           client.RunClient("127.0.0.1")
      except Exception as e:
           print(e)
+          input() # Wait for enter
 
 if __name__ == "__main__":
      try:
@@ -28,3 +29,4 @@ if __name__ == "__main__":
           menu.Launch()
      except Exception as e:
           print(e)
+          input() # Wait for enter
